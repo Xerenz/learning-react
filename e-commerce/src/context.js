@@ -7,8 +7,12 @@ const ProductContext = React.createContext();
 class ProductProvider extends Component {
 
     state = {
-        products : storeProducts,
+        products : [],
         detailProduct : detailProduct
+    }
+
+    componentDidMount() {
+        this.setProducts();
     }
 
     handleDetail = () => {
@@ -17,6 +21,19 @@ class ProductProvider extends Component {
 
     addToCart = () => {
         console.log("Hello from add to cart");
+    }
+
+    setProducts = () => { // changing to pass by value
+        let products = [];
+
+        storeProducts.forEach(item => {
+            const singleItem = {...item};
+            products = [...products, singleItem];
+        });
+
+        this.setState(() => {
+            return {products};
+        });
     }
 
     render() {
