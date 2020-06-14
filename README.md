@@ -1,2 +1,2 @@
-# Bootstrap-Cheat-Sheet
-A reference file for bootstrap. 
+# learning react 
+learning react - building a react app from ground up
