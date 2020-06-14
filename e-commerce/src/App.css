@@ -12,7 +12,7 @@ body {
   color: var(--mainDark) !important;
 }
 
-.title-class {
+.text-title {
   font-family: "Permanent Marker", cursive;
   letter-spacing: 0.3rem;
   text-transform: uppercase;
