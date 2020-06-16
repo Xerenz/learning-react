@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Title from '../Title';
 import CartColumn from './CartColumn';
 import CartList from './CartList';
+import CartTotals from './CartTotals';
 import EmptyCart from './EmptyCart';
 
 import { ProducConsumer, ProductConsumer } from '../../context';
@@ -20,6 +21,7 @@ export default class Cart extends Component {
                                     <Title name="your" title="cart"/>
                                     <CartColumn/>   
                                     <CartList value={value}/>
+                                    <CartTotals value={value}/>
                                 </React.Fragment>
                             )
                         } else {
