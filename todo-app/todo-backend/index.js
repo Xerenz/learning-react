@@ -1,3 +1,4 @@
+const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
@@ -15,6 +16,8 @@ mongoose.Promise = Promise;
 
 // setting up app
 const app = express();
+// setting up app to process cross domain http requests
+app.use(cors());
 // setting up  app to parse json objects
 app.use(bodyParser.json());
 
