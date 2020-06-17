@@ -13,7 +13,7 @@ const createTodoTask = async (task) => {
 }
 
 const putTodoTask = async (id, payload) => {
-    const {data : task } = await axios.put(`${URL}/${id}`, payload);
+    const { data : task } = await axios.put(`${URL}/${id}`, payload);
     return task;
 }
 
