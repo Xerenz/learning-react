@@ -60,8 +60,8 @@ app.put("/todo/:id", async (req, res, next) => {
 
 app.delete("/todo/:id", async (req, res, next) => {
     try {
-        const task = await Todo.findByIdAndDelete(req.params.id);
-        return success(res, task);
+        await Todo.findByIdAndDelete(req.params.id);
+        return success(res, "task deleted");
     } catch(err) {
         console.log("*Failed to delete user task", req.params.id);
         next({ status : 400, message : "failed to delete task"});
