@@ -2,8 +2,8 @@ const HDWalletProvider=require('@truffle/hdwallet-provider');
 const Web3 = require('web3');
 const compileOutput=require('./compile.js');
 const provider = new HDWalletProvider(
-  'input vault twice marine spider correct atom nest comic puppy mail dolphin',
-  'https://rinkeby.infura.io/v3/6ed979e2086d4e5281830ccd72b5ae62',
+  '',
+  '',
   0,
   5
 );
