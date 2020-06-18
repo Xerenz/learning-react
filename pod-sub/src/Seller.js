@@ -1,8 +1,8 @@
 import React,{Component} from 'react';
-import web3 from './web3.js'
-import POD from './POD'
+import web3 from './web3.js';
+import POD from './POD';
 
-import { ButtonContainer } from './components/Button';
+import { ButtonContainer } from "./components/Button";
 
 var keyT=null;
 
@@ -11,12 +11,16 @@ class Seller extends Component{
     super(props)
     this.state = {
       signed:false,
-      Key:'0'
+      Key:'0',
+      cancellable: false,
+      reason: 'r'
     }
     this.sign = this.sign.bind(this)
     this.update = this.update.bind(this)
     this.tick= this.tick.bind(this)
     this.createPackageAndKey=this.createPackageAndKey.bind(this)
+    this.cancelTransaction= this.cancelTransaction.bind(this)
+
   }
   sign = (event) => {
     this.setState({
@@ -32,6 +36,13 @@ class Seller extends Component{
     })
   }
 
+  async cancelTransaction(){
+    await POD.methods.cancelTransaction(this.state.reason).send({
+      from: this.props.address
+    })
+  }
+
+
   async tick() {
     console.log("tick",this.props.index)
     if(this.props.index !== await POD.methods.state().call() ){
@@ -45,6 +56,12 @@ class Seller extends Component{
     if(this.state.key !== keyt){
       this.setState({
         key: keyt
+      })
+    }
+    let cancellable = await POD.methods.cancellable(this.props.address).call()
+    if(this.state.cancellable != cancellable){
+      this.setState({
+        cancellable: cancellable
       })
     }
   }
@@ -82,14 +99,23 @@ class Seller extends Component{
        </div>
        <div className="d-flex justify-content-center py-5">
           <h3>Price: {this.props.price}</h3>
-       </div>        
-        <div className="d-flex justify-content-center">
-          {this.props.state==='waitingForVerificationbySeller' ?  <ButtonContainer onClick={this.sign}>Agree terms and conditions</ButtonContainer>:null}
-          {this.props.state==='MoneyWithdrawn'? <ButtonContainer cart="true" onClick={this.createPackageAndKey}>Create Package And Key</ButtonContainer>:null}
-          {this.props.state==='PackageAndTransporterKeyCreated'?
-            <h3>Transporter Key: {this.state.key}</h3>
-          :null}
-        </div>
+       </div>     
+
+       {this.props.state!=='Aborted' && this.props.state!=='PaymentSettledSuccess' ?   
+          <div className="d-flex justify-content-center">
+            {this.props.state==='waitingForVerificationbySeller' ?  <ButtonContainer onClick={this.sign}>Agree terms and conditions</ButtonContainer>:null}
+            {this.props.state==='MoneyWithdrawn'? <ButtonContainer cart="true" onClick={this.createPackageAndKey}>Create Package And Key</ButtonContainer>:null}
+            {this.props.state==='PackageAndTransporterKeyCreated'?
+              <h3>Transporter Key: {this.state.key}</h3>
+            :null}
+          </div>
+        :null}
+
+        {this.state.cancellable ?
+          <div className="d-flex justify-content-center py-4">
+            <ButtonContainer cart="true" onClick={this.cancelTransaction}>Cancel Sale</ButtonContainer>
+          </div>
+        :null}
       </div>
 
     )

@@ -1,8 +1,9 @@
 import React,{Component} from 'react';
-import web3 from './web3.js'
-import POD from './POD'
+import web3 from './web3.js';
+import POD from './POD';
 
-import { ButtonContainer } from "./components/Button";
+import { ButtonContainer } from './components/Button';
+
 
 class Buyer extends Component {
   constructor(props){
@@ -11,15 +12,19 @@ class Buyer extends Component {
       signed:false,
       key:'0',
       showKey:false,
-      transporterKey:'0'
+      transporterKey:'0',
+      cancellable: false,
+      reason:'r',
+      isRefundable:false
     }
-    
     this.sign = this.sign.bind(this)
     this.handleChange = this.handleChange.bind(this)
     this.update = this.update.bind(this)
     this.tick= this.tick.bind(this)
     this.requestPackageKey= this.requestPackageKey.bind(this)
     this.verifyKeyBuyer= this.verifyKeyBuyer.bind(this)
+    this.cancelTransaction= this.cancelTransaction.bind(this)
+    this.refund= this.refund.bind(this)
   }
 
   handleChange(evt) {
@@ -48,6 +53,18 @@ class Buyer extends Component {
     })
   }
 
+  async cancelTransaction(){
+    await POD.methods.cancelTransaction(this.state.reason).send({
+      from: this.props.address
+    })
+  }
+
+  async refund(){
+    await POD.methods.refund().send({
+      from: this.props.address
+    })
+  }
+
   async tick() {
     console.log("tick",this.props.index)
     if(this.props.index !== await POD.methods.state().call()){
@@ -59,6 +76,21 @@ class Buyer extends Component {
     if(this.state.key !== keyb){
       this.setState({
         key: keyb
+      })
+    }
+    let cancellable = await POD.methods.cancellable(this.props.address).call()
+    if(this.state.cancellable != cancellable){
+      this.setState({
+        cancellable: cancellable
+      })
+    }
+    let isRefundable = await POD.methods.isRefundable().call({
+      from: this.props.address
+    })
+    console.log(isRefundable)
+    if(this.state.isRefundable != isRefundable){
+      this.setState({
+        isRefundable: isRefundable
       })
     }
   }
@@ -77,7 +109,8 @@ class Buyer extends Component {
   render(){
 
     return(
-      
+
+
       <div className="container">
         <div className="d-flex justify-content-center py-5">
           <img className="img-rounded" src="buyer.jpg" />
@@ -92,30 +125,36 @@ class Buyer extends Component {
        <h3>
          {this.props.state==="waitingForVerificationbyBuyer"?"Please sign the Terms and Conditions":"Please wait..."}
          {this.props.state==="ItemOnTheWay"?"Your package is on the way!":null}
+         {this.props.state === "ArrivedToDestination"?"Your package has arrived!":null}
       </h3> 
        </div>
        <div className="d-flex justify-content-center py-5">
           <h3>Price: {this.props.price}</h3>
-       </div>        
-        <div className="d-flex justify-content-center">
-          {this.props.state==='waitingForVerificationbyBuyer' ?  <ButtonContainer onClick={this.sign}>Agree terms and conditions</ButtonContainer>:null}
-          {this.props.state==='ItemOnTheWay'? <ButtonContainer cart="true" onClick={this.createPackageAndKey}>Get Verification Key</ButtonContainer>:null}
-        </div>
-        <div className="d-flex justify-content-center py-5">
-        {this.state.key !== '0' ?
-          (
-            this.state.showKey ?
-            <div>
-              <h4>Your Key: 
-                {this.state.key}
-              </h4>
-              <button className="btn btn-warning" onClick={() => {this.setState({showKey: !this.state.showKey})}}>Hide Key</button>
-            </div>
-            :<button className="btn btn-primary" onClick={() => {this.setState({showKey: !this.state.showKey})}}>Show Key</button>
-          )
-          :null}
+       </div>  
+        
+       {this.props.state!=='Aborted' && this.props.state !=='PaymentSettledSuccess' ?
+        <div>
+          <div className="d-flex justify-content-center">
+            {this.props.state==='waitingForVerificationbyBuyer' ?  <ButtonContainer onClick={this.sign}>Agree terms and conditions</ButtonContainer>:null}
+            {this.props.state==='ItemOnTheWay'? <ButtonContainer cart="true" onClick={this.requestPackageAndKey}>Get Verification Key</ButtonContainer>:null}
+          </div>
+          <div className="d-flex justify-content-center py-5">
+            {this.state.key !== '0' ?
+              (
+                this.state.showKey ?
+                <div>
+                  <h4>Your Key: 
+                    {this.state.key}
+                  </h4>
+                  <button className="btn btn-warning" onClick={() => {this.setState({showKey: !this.state.showKey})}}>Hide Key</button>
+                </div>
+                :<button className="btn btn-primary" onClick={() => {this.setState({showKey: !this.state.showKey})}}>Show Key</button>
+              )
+              :null}
+          </div>
 
           {this.props.state === "ArrivedToDestination"  ?
+          <div className="d-flex justify-content-center py-5">
             <form onSubmit={this.verifyKeyBuyer}>
               <div className="form-group">
               <label htmlFor='key'>Enter Transporter key: </label>
@@ -130,14 +169,33 @@ class Buyer extends Component {
               </div>
               {this.state.transporterKey !== '0' && this.state.transporterKey !== '' ? <button className="btn">Verify</button> : null}
             </form>
+          </div>
           : null}
 
+          {(this.props.state==='ItemOnTheWay' || this.props.state==='PackageKeyGivenToBuyer') && this.state.isRefundable ?
+            <div className="d-flex justify-content-center py-3">
+              <label htmlFor='refund'>Transporter exceeded time: </label>
+                <ButtonContainer
+                  name='refund'
+                  onClick={this.refund}
+                  id='refund'
+                >Refund</ButtonContainer>
+            </div>
+          :null}
+
+          {this.state.cancellable ?
+            <div className="d-flex justify-content-center py-5">
+              <button className="btn btn-danger btn-lg" onClick={this.cancelTransaction}>Cancel Order</button>
+            </div>
+          :null}
+
         </div>
+        :null}
       </div>
 
     )
   }
 }
-// {(this.props.state==='waitingForVerificationbySeller' && !this.props.buyClicked) ? <button onClick={this.buy}>Buy</button>:null}
+
 
 export default Buyer;
