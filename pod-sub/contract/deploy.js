@@ -3,7 +3,7 @@ const Web3 = require('web3');
 const compileOutput=require('./compile.js');
 const provider = new HDWalletProvider(
   '',
-  'https://rinkeby.infura.io/v3/<t>',
+  '',
   0,
   5
 );
