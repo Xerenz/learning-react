@@ -129,9 +129,20 @@ class Transporter extends Component{
     <p>Adderss: {this.props.address.slice(0, 4)}...{this.props.address.slice(25, 29)}</p>
        </div>
        <div className="d-flex justify-content-center">
-       <h3>
-         {this.props.state==="waitingForVerificationbyTransporter"?"Please agree the Terms and Conditions":"Please wait..."}
-         {this.props.state==="PackageAndTransporterKeyCreated"?"Package is ready to be delivered!":null}
+       
+      <h3 className="text-muted">
+         {this.props.state==="waitingForVerificationbyBuyer"?"Waiting for Buyer to confirm":null}
+         {this.props.state==="waitingForVerificationbyTransporter"?"Please agree the Terms and Conditions":null}
+         {this.props.state==="waitingForVerificationbySeller"?"Waiting for Seller to confirm":null}
+         {this.props.state==="PackageAndTransporterKeyCreated"?"Shipping package":null}
+         {this.props.state==="ItemOnTheWay"?"Package is on the way":null}
+         {this.props.state==="PaymentSettledSuccess"?"Package Delivered":null}
+         {this.props.state === "ArrivedToDestination"?"You have reached the destination":null}
+      </h3> 
+      <h3 className="text-danger">
+        {this.props.state === "DisputeVerificationFailure"?"Issue in verification":null}
+        {this.props.state === "CancellationRefund"?"Cancelled transaction, initiating refund":null}
+        {this.props.state === "Aborted"?"Transaction Aborted":null}
       </h3>
        </div>
 
@@ -147,12 +158,13 @@ class Transporter extends Component{
           {this.state.key !== '0' ?
             (
               <div className="d-flex justify-content-center py-5">
-                this.state.showKey ?
+                {this.state.showKey ?
                 <div>
                   <h3>key: {this.state.key}</h3>
                   <button className="btn btn-warning" onClick={() => {this.setState({showKey: !this.state.showKey})}}>Hide Key</button>
                 </div>
                 :<button className="btn btn-primary" onClick={() => {this.setState({showKey: !this.state.showKey})}}>Show Key</button>
+                }
               </div>
             )
           :null}

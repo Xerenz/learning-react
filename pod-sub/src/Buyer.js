@@ -122,11 +122,20 @@ class Buyer extends Component {
     <p>Adderss: {this.props.address.slice(0, 4)}...{this.props.address.slice(25, 29)}</p>
        </div>
        <div className="d-flex justify-content-center">
-       <h3>
-         {this.props.state==="waitingForVerificationbyBuyer"?"Please sign the Terms and Conditions":"Please wait..."}
+       <h3 className="text-muted">
+         {this.props.state==="waitingForVerificationbyBuyer"?"Please sign the Terms and Conditions":null}
+         {this.props.state==="waitingForVerificationbyTransporter"?"Waiting for Transporter":null}
+         {this.props.state==="waitingForVerificationbySeller"?"Waiting for Seller to confirm":null}
+         {this.props.state==="PackageAndTransporterKeyCreated"?"Your package has been shiped!":null}
          {this.props.state==="ItemOnTheWay"?"Your package is on the way!":null}
+         {this.props.state==="PaymentSettledSuccess"?"Your packaged is delivered!!":null}
          {this.props.state === "ArrivedToDestination"?"Your package has arrived!":null}
       </h3> 
+      <h3 className="text-danger">
+        {this.props.state === "DisputeVerificationFailure"?"Issue in verification":null}
+        {this.props.state === "CancellationRefund"?"Cancelled transaction, initiating refund":null}
+        {this.props.state === "Aborted"?"Transaction Aborted":null}
+      </h3>
        </div>
        <div className="d-flex justify-content-center py-5">
           <h3>Price: {this.props.price}</h3>
@@ -136,7 +145,7 @@ class Buyer extends Component {
         <div>
           <div className="d-flex justify-content-center">
             {this.props.state==='waitingForVerificationbyBuyer' ?  <ButtonContainer onClick={this.sign}>Agree terms and conditions</ButtonContainer>:null}
-            {this.props.state==='ItemOnTheWay'? <ButtonContainer cart="true" onClick={this.requestPackageAndKey}>Get Verification Key</ButtonContainer>:null}
+            {this.props.state==='ItemOnTheWay'? <ButtonContainer cart="true" onClick={this.requestPackageKey}>Get Verification Key</ButtonContainer>:null}
           </div>
           <div className="d-flex justify-content-center py-5">
             {this.state.key !== '0' ?
@@ -176,6 +185,7 @@ class Buyer extends Component {
             <div className="d-flex justify-content-center py-3">
               <label htmlFor='refund'>Transporter exceeded time: </label>
                 <ButtonContainer
+                  className="ml-3"
                   name='refund'
                   onClick={this.refund}
                   id='refund'

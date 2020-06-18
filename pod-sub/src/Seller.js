@@ -91,10 +91,20 @@ class Seller extends Component{
     <p>Adderss: {this.props.address.slice(0, 4)}...{this.props.address.slice(25, 29)}</p>
        </div>
        <div className="d-flex justify-content-center">
-       <h3>
-         {this.props.state==="waitingForVerificationbySeller"?"Please agree the Terms and Conditions":"Please wait..."}
+      <h3 className="text-muted">
+         {this.props.state==="waitingForVerificationbyBuyer"?"Waiting for Buyer to confirm":null}
+         {this.props.state==="waitingForVerificationbyTransporter"?"Waiting for transporter to confirm":null}
+         {this.props.state==="waitingForVerificationbySeller"?"Please agree the Terms and Conditions":null}
          {this.props.state==="MoneyWithdrawn"?"Collateral deposited!":null}
          {this.props.state==="PackageAndTransporterKeyCreated"?"Package is ready to be delivered!":null}
+         {this.props.state==="ItemOnTheWay"?"Package is on the way":null}
+         {this.props.state==="PaymentSettledSuccess"?"Package Delivered":null}
+         {this.props.state === "ArrivedToDestination"?"Package reached the destination":null}
+      </h3> 
+      <h3 className="text-danger">
+        {this.props.state === "DisputeVerificationFailure"?"Issue in verification":null}
+        {this.props.state === "CancellationRefund"?"Cancelled transaction, initiating refund":null}
+        {this.props.state === "Aborted"?"Transaction Aborted":null}
       </h3>
        </div>
        <div className="d-flex justify-content-center py-5">
