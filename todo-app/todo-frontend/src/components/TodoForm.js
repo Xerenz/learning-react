@@ -1,13 +1,36 @@
 import React, { Component } from 'react';
 
+import { createTodoTask } from "../APIHelper";
+
 export default class TodoForm extends Component {
+
+    state = {
+        value : ""
+    };
+
+    handleChange = event => {
+        this.setState({
+            value : event.target.value
+        });
+    }
+
+    handleSubmit = async event => {
+        event.preventDefault();
+        console.log("Input:", this.state.value);
+        const createdTask = await createTodoTask(this.state.value);
+        console.log(createdTask);
+    }
+
     render() {
         return (
             <div className="container">
-                <form>
+                <form onSubmit={ this.handleSubmit }>
                     <div className="form-row my-5">
                         <div className="col-10">
-                            <input type="text" className="form-control"/>
+                            <input type="text" 
+                            value={ this.state.value } 
+                            className="form-control" 
+                            onChange={ this.handleChange } />
                         </div>
                         <div className="col-auto">
                             <button type="submit" className="btn btn-warning">Add</button>
