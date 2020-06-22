@@ -1,5 +1,5 @@
 import store from './store'
-import { BUG_ADDED, BUG_REMOVED } from './actionTypes'
+import { BUG_ADDED, BUG_REMOVED, BUG_RESOLVED } from './actionTypes'
 
 // subscribing to a store
 // basically refresh or re render app
@@ -15,6 +15,13 @@ store.dispatch({
     type : BUG_ADDED,
     payload : {
         description : 'Bug1'
+    }
+})
+
+store.dispatch({
+    type : BUG_RESOLVED,
+    payload : {
+        id : 0
     }
 })
 
