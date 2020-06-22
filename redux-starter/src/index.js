@@ -1,4 +1,5 @@
 import store from './store'
+import { BUG_ADDED, BUG_REMOVED } from './actionTypes'
 
 // subscribing to a store
 // basically refresh or re render app
@@ -11,7 +12,7 @@ const unsubcribe =  store.subscribe(() => {
 
 // dispatch an action
 store.dispatch({
-    type : 'bugAdded',
+    type : BUG_ADDED,
     payload : {
         description : 'Bug1'
     }
@@ -21,7 +22,7 @@ unsubcribe() // after this is called the UI won't be notified of the change
 
 // dispatch another action
 store.dispatch({
-    type : 'bugRemoved',
+    type : BUG_REMOVED,
     payload : {
         id : 0
     }
