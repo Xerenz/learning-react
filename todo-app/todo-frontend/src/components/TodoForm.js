@@ -16,9 +16,9 @@ export default class TodoForm extends Component {
 
     handleSubmit = async event => {
         event.preventDefault();
-        console.log("Input:", this.state.value);
         const createdTask = await createTodoTask(this.state.value);
-        console.log(createdTask);
+        console.log(createdTask)
+        this.setState({value : ""})
     }
 
     render() {
