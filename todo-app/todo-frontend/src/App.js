@@ -5,6 +5,8 @@ import TodoList from './components/TodoList';
 import CheckedList from './components/CheckedList';
 import { getTodoTasks, createTodoTask } from './APIHelper'
 
+import './App.css'
+
 export default class App extends Component {
 
   state = {
@@ -18,7 +20,7 @@ export default class App extends Component {
   setTasks = async () => {
     let todos = await getTodoTasks()
     let tasks = []
-    console.log(todos)
+  
     todos.forEach(task => {
       tasks = [...tasks, {...task}]
     })
@@ -29,6 +31,10 @@ export default class App extends Component {
     this.setState({
       tasks : [...this.state.tasks, task]
     })
+  }
+
+  deleteFromTaskList = id => {
+    return;
   }
 
   render() {

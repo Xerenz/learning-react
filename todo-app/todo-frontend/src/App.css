@@ -1,0 +1,7 @@
+.no-btn {
+    border: none;
+    background-color: transparent;
+}
+.no-btn:hover {
+    transform: scale(1.5);
+}

@@ -16,6 +16,7 @@ export default class TodoForm extends Component {
         event.preventDefault();
         let newTask = await createTodoTask(this.state.box)
         this.props.method(newTask)
+        this.setState({ box : '' })
     }   
 
     render() {
