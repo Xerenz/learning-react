@@ -10,7 +10,7 @@ export default class TodoList extends Component {
                 <div className="row">
                     {
                         this.props.list.map(task => {
-                            return <Task key={ task._id } data={ task } />
+                            return <Task key={ task._id } data={ task } deleteTask={ this.props.method } />
                         })
                     }
                 </div>

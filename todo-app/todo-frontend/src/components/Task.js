@@ -5,10 +5,9 @@ import { deleteTodoTask } from '../APIHelper'
 export default class Task extends Component {
 
     handleDelete = async id => {
-        console.log(id)
         let deleted = await deleteTodoTask(id)
         console.log(deleted)
-        window.location.reload()
+        this.props.deleteTask(id)
     } 
 
     render() {
