@@ -39,11 +39,22 @@ export default class App extends Component {
     this.setState({ tasks : updatedList })
   }
 
+  updateTaskStatus = (id, status) => {
+    let tempList = [...this.state.tasks]
+    let task = tempList.find(task => task._id === id)
+    task.completed = status
+    console.log(tempList)
+    this.setState({ tasks : tempList })
+  }
+
   render() {
     return (
       <React.Fragment>
         <TodoForm method={ this.addToTaskList } />
-        <TodoList list={ this.state.tasks } method={ this.deleteFromTaskList } />
+        <TodoList list={ this.state.tasks } methods={ {
+          deleteTask : this.deleteFromTaskList,
+          updateStatus : this.updateTaskStatus
+          } } />
         <CheckedList/>
       </React.Fragment>
     )
